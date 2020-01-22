@@ -12,7 +12,6 @@ defmodule BingoDisplay.Application do
 
     children = [
       {Task.Supervisor, name: BingoDisplay.APISupervisor},
-#      {Task, fn -> BingoDisplay.API.accept(8800) end}
       Supervisor.child_spec({Task, fn -> BingoDisplay.API.accept(8800) end},
         restart: :permanent)
     ]

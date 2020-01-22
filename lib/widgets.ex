@@ -1,5 +1,4 @@
 defmodule BingoDisplay.Widgets do
-  alias Scenic.Graph
   import Scenic.Primitives
 
   @yaxes  {40, 140, 240, 340, 440}
