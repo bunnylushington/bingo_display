@@ -36,6 +36,8 @@ defmodule BingoDisplay.API do
                 "clear" -> 
                   BingoDisplay.Scene.Board.clear
                   "Cleared\n"
+                "help" ->
+                  "#, clear, help, ff"
                 _ ->
                   "Not a command (#{ input })\n"
               end

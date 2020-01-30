@@ -1,6 +1,7 @@
 defmodule BingoDisplay.Scene.Board do
   use Scenic.Scene
   alias Scenic.Graph
+  alias BingoDisplay.Scene.BoardCache, as: Cache
 
   import BingoDisplay.Widgets
 
@@ -13,50 +14,32 @@ defmodule BingoDisplay.Scene.Board do
   |> letter("G", {45, 340})
   |> letter("O", {45, 440})
 
+
   def init(_, _) do
-    graph = build_graph(@graph)
-    {:ok, %{graph: graph, active: []}, push: graph}
-  end
-
-  def build_graph(graph) do
-    build_graph(graph, 1)
-  end
-
-  def build_graph() do
-    graph = build_graph(@graph)
-    {graph, %{graph: graph, active: []}, push: graph}
+    IO.puts("running init")
+    {graph, state} = Cache.start()
+    {:ok, state, push: graph}
   end
 
 
-  def build_graph(graph, count) when count == 42 do
-    build_graph(graph, count + 1)
-  end
-  
-  def build_graph(graph, count) do
-    case count > @number_count do
-      true -> graph
-      false ->
-        build_graph(number(graph, count, coordinate(count), false), count + 1)
-    end
-  end
-
-  def handle_cast({:flip, n}, %{graph: graph, active: active}) do
+  def handle_cast({:flip, n}, _) do
+    {graph, %{active: active}=state} = Cache.get
     {is_active, active_list} = case Enum.member?(active, n) do
                                  false -> {true, active ++ [n]}
                                  true  -> {false, List.delete(active, n)}
                                end
-    new_graph = graph |>
-      Graph.delete(n) |>
-      number(n, coordinate(n), is_active)
-    {:noreply, %{graph: new_graph, active: active_list}, push: new_graph}
+    new_graph = Graph.delete(graph, n) |> number(n, coordinate(n), is_active)
+    {_, new_state} = Cache.set(new_graph, %{state | active: active_list})
+    {:noreply, new_state, push: new_graph}
   end
 
   def handlle_cast(:clear_board, _state) do
-    {graph, state} = build_graph()
+    {graph, state} = Cache.restart
     {:noreply, state, push: graph}
   end
 
 
+  # -- API
   def flip_number(42) do
     :ok
   end
@@ -69,11 +52,36 @@ defmodule BingoDisplay.Scene.Board do
     Scenic.Scene.cast(graph_ref(), :clear_board)
   end
 
-  def graph_ref() do
+
+  def build_graph() do
+    graph = build_graph(@graph)
+    {graph, %{active: []}}
+  end
+
+  # -- private functions
+  defp graph_ref() do
     {:ok, info} = Scenic.ViewPort.info(:main_viewport)
     info.root_graph
   end
-    
+
+  
+  defp build_graph(graph) do
+    build_graph(graph, 1)
+  end
+
+  defp build_graph(graph, count) when count == 42 do
+    build_graph(graph, count + 1)
+  end
+  
+  defp build_graph(graph, count) do
+    case count > @number_count do
+      true -> graph
+      false ->
+        build_graph(number(graph, count, coordinate(count), false), count + 1)
+    end
+  end
+
+  
 
   
 end
