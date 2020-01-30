@@ -7,7 +7,7 @@ defmodule BingoDisplay.Scene.Board do
 
   @number_count 75
   
-  @graph Graph.build(font_size: 48, font: :roboto_mono, id: :board)
+  @graph Graph.build(font_size: 48, font: :roboto, id: :board)
   |> letter("B", {45, 40})
   |> letter("I", {45, 140})
   |> letter("N", {45, 240})
@@ -16,7 +16,6 @@ defmodule BingoDisplay.Scene.Board do
 
 
   def init(_, _) do
-    IO.puts("running init")
     {graph, state} = Cache.start()
     {:ok, state, push: graph}
   end
@@ -28,12 +27,12 @@ defmodule BingoDisplay.Scene.Board do
                                  false -> {true, active ++ [n]}
                                  true  -> {false, List.delete(active, n)}
                                end
-    new_graph = Graph.delete(graph, n) |> number(n, coordinate(n), is_active)
+    new_graph = number(graph, n, coordinate(n), is_active)
     {_, new_state} = Cache.set(new_graph, %{state | active: active_list})
     {:noreply, new_state, push: new_graph}
   end
 
-  def handlle_cast(:clear_board, _state) do
+  def handle_cast(:clear_board, _state) do
     {graph, state} = Cache.restart
     {:noreply, state, push: graph}
   end
@@ -52,7 +51,6 @@ defmodule BingoDisplay.Scene.Board do
     Scenic.Scene.cast(graph_ref(), :clear_board)
   end
 
-
   def build_graph() do
     graph = build_graph(@graph)
     {graph, %{active: []}}
@@ -63,7 +61,6 @@ defmodule BingoDisplay.Scene.Board do
     {:ok, info} = Scenic.ViewPort.info(:main_viewport)
     info.root_graph
   end
-
   
   defp build_graph(graph) do
     build_graph(graph, 1)

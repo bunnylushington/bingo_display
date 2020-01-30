@@ -15,20 +15,28 @@ defmodule BingoDisplay.Widgets do
     )
   end
 
-  def number(graph, n, xform, inverted?) do
-    {stroke, fg, bg} = case inverted? do
-                         true  -> {:red, :black, :white}
-                         false -> {:blue, :white, :black}
-                       end
+  def number(graph, n, {x,y}, inverted?) do
+    fg = case inverted? do
+           true -> :white
+           false -> {55,55,55,100}
+         end
+    graph |> text(to_string(n), fill: fg, text_align: :center, font: :roboto,
+      translate: {x, y+14}, id: n)
+  end
+
+  def wrong(graph) do
     group(graph,
       fn g -> g
-      |> circle(30, fill: {:color, bg}, stroke: {2, stroke})
-      |> text(to_string(n), fill: fg, text_align: :center, translate: {0, 14})
+      |> rrect({200,250,10}, stroke: {4, :red})
+      |> text("X", text_align: :center, fill: :red,
+        font_size: 256, translate: {100, 200})
       end,
-      t: xform, id: n
+      t: {200,200},
+      id: :wrong_x
     )
   end
 
+  
   def coordinate(number) do
     y = elem(@yaxes, div(number - 1, 15))
     position = case rem(number, 15) do
