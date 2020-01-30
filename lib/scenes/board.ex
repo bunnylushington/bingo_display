@@ -27,6 +27,11 @@ defmodule BingoDisplay.Scene.Board do
     {graph, %{graph: graph, active: []}, push: graph}
   end
 
+
+  def build_graph(graph, count) when count == 42 do
+    build_graph(graph, count + 1)
+  end
+  
   def build_graph(graph, count) do
     case count > @number_count do
       true -> graph
@@ -49,6 +54,11 @@ defmodule BingoDisplay.Scene.Board do
   def handlle_cast(:clear_board, _state) do
     {graph, state} = build_graph()
     {:noreply, state, push: graph}
+  end
+
+
+  def flip_number(42) do
+    :ok
   end
   
   def flip_number(n) do

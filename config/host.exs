@@ -4,7 +4,7 @@ config :bingo_display, :viewport, %{
   name: :main_viewport,
   # default_scene: {BingoDisplay.Scene.Crosshair, nil},
   default_scene: {BingoDisplay.Scene.Board, nil},
-  size: {800, 480},
+  size: {1280, 620},
   opts: [scale: 1.0],
   drivers: [
     %{
