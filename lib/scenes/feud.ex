@@ -13,7 +13,7 @@ defmodule BingoDisplay.Scene.Feud do
                {"Why does the Groundhog scream?",
                 ["(3 Points) The World Is Terrifying and Meaningless",
                  "(2 Points) Shadows",
-                 "(1 Point) RPredators"]},
+                 "(1 Point) Prredators"]},
                {"How do you get a Groundhog out of their hole?",
                 ["(3 Points) A Good Party",
                  "(2 Points) A Weather Report",
