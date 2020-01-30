@@ -18,7 +18,7 @@ defmodule BingoDisplay.Widgets do
   def number(graph, n, {x,y}, inverted?) do
     fg = case inverted? do
            true -> :white
-           false -> {55,55,55,100}
+           false -> {40,40,40,100}
          end
     graph |> text(to_string(n), fill: fg, text_align: :center, font: :roboto,
       translate: {x, y+14}, id: n)
@@ -36,7 +36,6 @@ defmodule BingoDisplay.Widgets do
     )
   end
 
-  
   def coordinate(number) do
     y = elem(@yaxes, div(number - 1, 15))
     position = case rem(number, 15) do
