@@ -19,16 +19,13 @@ defmodule BingoDisplay.Scene.Feud do
                  "(2 Points) A Weather Report",
                  "(1 Point) Repellents and Traps"]} ]
                  
-
-  @graph Graph.build(font_size: 48, font: :roboto, id: :ff)
-  |> text("Let's Play Family Feud!", text_align: :center, translate: {300,100})
-
-
   @yoffset 200
   @ystep 100
   
   def init(_, _) do
-    graph = @graph
+    graph = Graph.build(font_size: 72, font: :roboto, id: :ff)
+    |> text("Psychedelic Friendship Trivia!",
+    text_align: :center, translate: center())
     {:ok, %{graph: graph}, push: graph}
   end
 
@@ -64,12 +61,17 @@ defmodule BingoDisplay.Scene.Feud do
   
   # -- API
   def show_question(n) do
-    {question, _} = Enum.at(@questions, n-1)
+    {question, answers} = Enum.at(@questions, n-1)
     case question do
       nil -> "Question out of bounds"
       _ ->
         Scenic.Scene.cast(graph_ref(), {:question, question})
-        "Showing question #{n}"
+        """
+Showing question #{n}
+\t#{ Enum.join(answers, "\n\t") }
+
+"""
+        
     end
   end
 
@@ -95,12 +97,23 @@ defmodule BingoDisplay.Scene.Feud do
     Scenic.Scene.cast(graph_ref(), :nox)
   end
 
+  def center() do
+    {{x, y}, {x_scale, y_scale}} = port_size()
+    {x/2/(x_scale - 1), y/2/(y_scale - 1)}
+  end
+
   
   # -- private functions
   defp graph_ref() do
     {:ok, info} = Scenic.ViewPort.info(:main_viewport)
     info.root_graph
   end
-    
 
+  defp port_size() do
+    {:ok, info} = Scenic.ViewPort.info(:main_viewport)
+    scale = info.transforms[:scale]
+    {info.size, scale}
+  end
+
+  
 end
