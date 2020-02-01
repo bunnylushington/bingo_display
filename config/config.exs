@@ -15,6 +15,8 @@ config :bingo_display, target: Mix.target()
 
 config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
 
+config :nerves, :firmware, fwup_conf: "config/fwup.conf"
+
 # Use shoehorn to start the main application. See the shoehorn
 # docs for separating out critical OTP applications such as those
 # involved with firmware updates.

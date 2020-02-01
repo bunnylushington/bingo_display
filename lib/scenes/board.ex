@@ -15,7 +15,14 @@ defmodule BingoDisplay.Scene.Board do
   |> letter("O", {45, 440})
 
 
+  @font_metrics :code.priv_dir(:scenic) |>
+    Path.join("/static/font_metrics/Roboto-Regular.ttf.metrics")
+
+  @font_metrics_hash Scenic.Cache.Hash.file!(@font_metrics, :sha)
+  
+  
   def init(_, _) do
+    Scenic.Cache.Static.FontMetrics.load(@font_metrics, @font_metrics_hash)
     {graph, state} = Cache.start()
     {:ok, state, push: graph}
   end
